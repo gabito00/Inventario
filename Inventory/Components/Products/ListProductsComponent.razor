@@ -1,0 +1,63 @@
+﻿@using Entities2
+@using Business
+
+<hr />
+<div class="form-group">
+    <select class="form-control" @onchange="CategoryChanged">
+        <option value=" ">Seleccione categoría</option>
+        @foreach (CategoryEntity category in categories)
+        {
+            <option value="@category.CategoryID">@category.CategoryName</option>
+        }
+    </select>
+</div>
+<hr />
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Nombre producto</th>
+            <th>Categoría</th>
+            <th>Cantidad</th>
+            <td><a>Editar</a></td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (ProductEntity product in tempProducts)
+        {
+            <tr>
+                <td>@product.ProductName</td>
+                <td>@product.CategoryID</td>
+                <td>@product.TotalQuantity</td>
+                <td><a href="product/update/@product.ProductID">Editar</a></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    List<ProductEntity> products = new List<ProductEntity>();
+    List<ProductEntity> tempProducts = new List<ProductEntity>();
+    List<CategoryEntity> categories = new List<CategoryEntity>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        ProductBusiness instanciaproducts = new ProductBusiness();
+        CategoryBusiness instanciacategories = new CategoryBusiness();
+        products = instanciaproducts.GetList();
+        tempProducts = products;
+        categories = instanciacategories.GetList();
+    }
+
+    private void CategoryChanged(ChangeEventArgs e)
+    {
+        if (string.IsNullOrWhiteSpace(e.Value.ToString()))
+        {
+            tempProducts = products;
+        }
+        else
+        {
+            tempProducts = products.Where(p => p.CategoryID == e.Value.ToString()).ToList();
+        }
+    }
+}

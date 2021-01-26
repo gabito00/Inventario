@@ -1,0 +1,64 @@
+﻿@using Entities2
+@using Business
+
+<EditForm Model="oStorage">
+    <div class="form-group">
+        <label>Almacen</label>
+        <InputSelect @bind-Value="@oStorage.WarehouseID" class="form-control">
+            <option value="">Seleccione un almacen...</option>
+            @foreach (WarehouseEntity warehouse in warehouses)
+            {
+                <option value="@warehouse.WarehouseID">@warehouse.WarehouseName</option>
+            }
+        </InputSelect>
+    </div>
+    <div class="form-group">
+        <label>Producto</label>
+        <InputSelect @bind-Value="@oStorage.ProductID" class="form-control">
+            <option value=" ">Seleccione un producto...</option>
+            @foreach (ProductEntity product in products)
+            {
+                <option value="@product.ProductID">@product.ProductName</option>
+            }
+        </InputSelect>
+    </div>
+
+    <div class="form-group">
+        <input type="button" value="Almacenar producto" @onclick="SaveStorage" class="btn btn-primary" />
+    </div>
+</EditForm>
+
+<div class="text-center h4">@message</div>
+
+@code {
+    StorageEntity oStorage = new StorageEntity();
+    List<WarehouseEntity> warehouses = new List<WarehouseEntity>();
+    List<ProductEntity> products = new List<ProductEntity>();
+    WarehouseBusiness instaciaw = new WarehouseBusiness();
+    ProductBusiness instaciap = new ProductBusiness();
+    string message;
+
+    protected override async Task OnInitializedAsync()
+    {
+        warehouses = instaciaw.GetList();
+        products = instaciap.GetList();
+    }
+
+    private void SaveStorage()
+    {
+        StorageBusiness instancia = new StorageBusiness();
+        oStorage.StorageID = $"{oStorage.WarehouseID}-{oStorage.ProductID}";
+
+        if (!instancia.IsProductInWarehouse(oStorage.StorageID))
+        {
+            oStorage.LastUpdate = DateTime.Now;
+            instancia.Create(oStorage);
+
+            message = "Producto almacenado";
+        }
+        else
+        {
+            message = "El producto ya está almacenado";
+        }
+    }
+}

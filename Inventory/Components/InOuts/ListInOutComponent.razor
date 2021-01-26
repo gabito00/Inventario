@@ -1,0 +1,35 @@
+﻿@using Entities2
+@using Business
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Referencia</th>
+            <th>Nombre Categoria</th>
+            <td><a>Editar</a></td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (CategoryEntity category in tempCategories)
+        {
+            <tr>
+                <td>@category.CategoryID</td>
+                <td>@category.CategoryName</td>
+                <td><a href="category/update/@category.CategoryID">Editar</a></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    List<CategoryEntity> categories = new List<CategoryEntity>();
+    List<CategoryEntity> tempCategories = new List<CategoryEntity>();
+    CategoryBusiness instancia = new CategoryBusiness();
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        categories = instancia.GetList();
+        tempCategories = categories;
+    }
+}

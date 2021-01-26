@@ -1,0 +1,13 @@
+﻿@page "/warehouse/update/{WarehouseID}"
+
+<UpdateWarehouseComponent WarehouseID="@WarehouseID"/>
+
+@code{
+    [Parameter]
+    public string WarehouseID { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        WarehouseID = WarehouseID;
+    }
+
+}

@@ -1,0 +1,35 @@
+﻿@using Entities2
+@using Business
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Nombre del Almacen</th>
+            <th>Direccion</th>
+            <td><a>Editar</a></td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var ware in tempWarehouses)
+        {
+        <tr>
+            <td>@ware.WarehouseName</td>
+            <td>@ware.WarehouseAddress</td>
+            <td><a href="warehouse/update/@ware.WarehouseID">Editar</a></td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    List<WarehouseEntity> warehouses = new List<WarehouseEntity>();
+    List<WarehouseEntity> tempWarehouses = new List<WarehouseEntity>();
+    WarehouseBusiness instancia = new WarehouseBusiness();
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        warehouses = instancia.GetList();
+        tempWarehouses = warehouses;
+    }
+}
